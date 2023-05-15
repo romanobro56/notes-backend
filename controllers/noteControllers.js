@@ -5,8 +5,8 @@ import User from "../schemas/user.js"
 
 dotenv.config()
 
-export const create = async (req, res) =>{
-  const { contents, color } = req.body
+export const createNote = async (req, res) =>{
+  const { contents, color, noteId } = req.body
   const siteId = req.siteId
   if (!siteId) {
     return res.status(401).json("No user authentication attached")
@@ -15,7 +15,7 @@ export const create = async (req, res) =>{
   const newNote = new Note({
     contents, 
     dateCreated,
-    noteId: [...Array(10)].map(() => Math.random().toString(36)[2]).join(''),
+    noteId,
     ownerId: siteId,
     color,
     completed: false

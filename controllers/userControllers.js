@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import User from "../schemas/user"
+import User from "../schemas/user.js"
 
 dotenv.config()
 
@@ -12,7 +12,7 @@ export const createUser = async (req, res) => {
   if (foundUser) {
     return res.status(401).json("user already exists")
   }
-  const date = new Date()
+  const dateCreated = new Date()
   const siteId = [...Array(10)].map(() => Math.random().toString(36)[2]).join('')
   bcrypt.genSalt(15, function ( err, salt ) {
     if (err){
@@ -27,7 +27,7 @@ export const createUser = async (req, res) => {
         siteId,
         password: hash,
         salt,
-        date
+        dateCreated
       })
       const savedUser = newUser.save()
       if (!savedUser){
@@ -74,7 +74,7 @@ export const updateUser = async (req, res) => {
   })
 }
 
-export const remove = async (req, res) => {
+export const deleteUser = async (req, res) => {
   const siteId = req.siteId
   const deletedUser = User.findOneAndDelete({siteId})
   if (!deletedUser){
