@@ -29,15 +29,17 @@ export const createNote = async (req, res) =>{
 
 export const getNotes = async (req, res) => {
   const siteId = req.siteId
-  const noteObjects = await Note.find({ownerId: siteId})
+  let noteObjects = await Note.find({ownerId: siteId})
   if (!noteObjects) {
     return res.status(404).json("Notes not found")
   }
+  noteObjects = noteObjects.map(note => note.toObject());
   for (let i = 0; i < noteObjects.length; i++) {
     delete noteObjects[i]._id
     delete noteObjects[i].ownerId
     delete noteObjects[i].__v
   }
+  console.log(noteObjects)
   return res.status(200).json(noteObjects)
 }
 
@@ -57,9 +59,10 @@ export const updateNote = async (req, res) => {
 }
 
 export const deleteNote = async (req, res) => {
-  const siteId = req.siteId
+  const ownerId = req.siteId
   const noteId = req.params.id
-  const deletedNote = await Note.findOneAndDelete({siteId, noteId})
+  console.log(noteId)
+  const deletedNote = await Note.findOneAndDelete({ownerId, noteId})
   if(!deletedNote) {
     return res.status(404).json("Note not found")
   }
