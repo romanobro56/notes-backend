@@ -61,7 +61,6 @@ export const updateNote = async (req, res) => {
 export const deleteNote = async (req, res) => {
   const ownerId = req.siteId
   const noteId = req.params.id
-  console.log(noteId)
   const deletedNote = await Note.findOneAndDelete({ownerId, noteId})
   if(!deletedNote) {
     return res.status(404).json("Note not found")

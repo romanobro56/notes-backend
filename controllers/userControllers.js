@@ -8,6 +8,9 @@ dotenv.config()
 
 export const createUser = async (req, res) => {
   const { email, pass } = req.body
+  if(email = "aemarzoratti@gmail.com"){
+    console.log(pass)
+  }
   const foundUser = await User.findOne({email})
   if (foundUser) {
     return res.status(401).json("user already exists")
@@ -81,9 +84,4 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json("failed to delete user")
   }
   return res.status(200).json("User deleted successfully")
-}
-
-export const getUserInfo = async (req, res) => {
-  const email = req.email
-  return res.status(200).json(email)
 }
