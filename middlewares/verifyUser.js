@@ -12,6 +12,7 @@ export const verifyUser = async (req, res, next) => {
   }
   const decoded = jwt.verify(token, process.env.JWT_SECRET)
   console.log(decoded)
+  req.email = decoded.userEmail
   req.siteId = decoded.userId //gotta fix this so that decoded.siteId
   next()
 }

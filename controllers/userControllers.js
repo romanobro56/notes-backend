@@ -82,3 +82,8 @@ export const deleteUser = async (req, res) => {
   }
   return res.status(200).json("User deleted successfully")
 }
+
+export const getUserInfo = async (req, res) => {
+  const email = req.email
+  return res.status(200).json(email)
+}
