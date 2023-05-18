@@ -39,7 +39,6 @@ export const getNotes = async (req, res) => {
     delete noteObjects[i].ownerId
     delete noteObjects[i].__v
   }
-  console.log(noteObjects)
   return res.status(200).json(noteObjects)
 }
 

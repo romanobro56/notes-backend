@@ -3,14 +3,12 @@ import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import User from "../schemas/user.js"
+import Note from "../schemas/note.js"
 
 dotenv.config()
 
 export const createUser = async (req, res) => {
   const { email, pass } = req.body
-  if(email = "aemarzoratti@gmail.com"){
-    console.log(pass)
-  }
   const foundUser = await User.findOne({email})
   if (foundUser) {
     return res.status(401).json("user already exists")
@@ -36,7 +34,7 @@ export const createUser = async (req, res) => {
       if (!savedUser){
         return res.staus(500).json("failed to save user in the database")
       }
-      const token = jwt.sign({ userId: siteId, userEmail: email}, process.env.JWT_SECRET, { expiresIn: '7d'})
+      const token = jwt.sign({ siteId, email}, process.env.JWT_SECRET, { expiresIn: '7d'})
       return res.status(200).json({token, message: "User Signed up successfully"})
     })
   })
@@ -84,4 +82,22 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json("failed to delete user")
   }
   return res.status(200).json("User deleted successfully")
+}
+
+export const getProfile = async (req, res) => {
+  const email = req.email
+  const ownerId = req.siteId
+  const notes = await Note.find({ownerId})
+  let sum = 0;
+  for (const note of notes) {
+    if (note.completed) {
+      sum += 1;
+    }
+  }
+  let profile = {
+    email: req.email,
+    numNotes: notes.length,
+    numCompleted: sum
+  }
+  return res.status(200).json(profile)
 }
